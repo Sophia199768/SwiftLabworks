@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Labwork2
-//
-//  Created by Sophia on 14.03.2025.
-//
-
 import SwiftUI
 
 struct ContentView: View {

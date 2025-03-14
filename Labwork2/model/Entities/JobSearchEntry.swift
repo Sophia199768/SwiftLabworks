@@ -1,5 +1,5 @@
 
-struct JobSearchingEntry {
+struct JobSearchEntry {
     var id: Int128
     var position: String
     var companyName: String

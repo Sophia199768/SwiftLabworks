@@ -1,6 +1,6 @@
 
-struct User {
-    var id: Int128
+
+struct CreateNewUserDto {
     var login: String
     var name: String
     var surname: String

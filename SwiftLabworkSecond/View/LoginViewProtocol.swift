@@ -1,4 +1,5 @@
 
+// View для странички авторизации
 protocol LoginViewProtocol {
     func showLoad()
     func hideLoad()

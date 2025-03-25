@@ -1,4 +1,5 @@
 
+// View для главной странички
 protocol MainViewProtocol {
     func updateTable(with items: [JobSearchEntry])
     func showLoad()

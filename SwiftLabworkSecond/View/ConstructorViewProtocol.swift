@@ -1,4 +1,5 @@
 
+// View для странички конструктора
 protocol ConstructorViewProtocol {
     func updateTable(with items: [AppTask])
     func showLoad()

@@ -1,4 +1,5 @@
 
+// View для странички просмотра информации о пользователе
 protocol ViewViewProtocol {
     func updateTable(with items: [View])
     func showLoad()

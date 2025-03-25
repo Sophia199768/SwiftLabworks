@@ -1,35 +1,17 @@
 
-class LoginController {
-    var view: LoginViewProtocol?
-    
-    private let authorizationService: AuthorizationService
-    
-    init(authorizationService: AuthorizationService) {
-        self.authorizationService = authorizationService
-    }
+// Контроллер для входа
+protocol LoginControllerProtocol {
+    // Инициализация при загрузке экрана
+    func viewDidLoad()
+    // Нажатие на кнопку входа
+    func login(username: String, password: String)
+    // Выход
+    func logOunt()
+    // Изменение текста в поле логина
+    func changeLogin(_ text: String)
+    // Изменение текста в поле пароля
+    func changePassword(_ text: String)
+    // Валидация введенных данных
+    func validateInput(username: String, password: String)
 
-    func login(username: String, password: String) {
-        view?.showLoad()
-        let authDto = AuthorizationDto(email: username, password: password)
-        let isSuccess = authorizationService.login(authorizationDto: authDto)
-        view?.hideLoad()
-
-        if isSuccess {
-            view?.clearInputFields()
-        } else {
-            view?.showError(message: "User with this login and password unexist! Try again or register")
-            view?.setLoginButtonEnabled(isEnabled: true)
-        }
-    }
-
-    func logOut() {
-        authorizationService.logout()
-        view?.clearInputFields()
-    }
-    
-    func validateInput(username: String, password: String) {
-        let isValid = !username.isEmpty && !password.isEmpty
-        view?.setLoginButtonEnabled(isEnabled: isValid)
-    }
 }
-

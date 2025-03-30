@@ -1,3 +1,4 @@
+import Foundation
 
 class AuthorizationServiceImpl: AuthorizationService {
     private let userRepository: UserRepository
@@ -16,6 +17,7 @@ class AuthorizationServiceImpl: AuthorizationService {
         print("User logged out")
     }
     
+    //регистрация
     func register(authorizationDto : CreateNewUserDto) -> Bool {
         let isExist = AuthorizationDto(email: authorizationDto.login, password: authorizationDto.password)
        
@@ -28,6 +30,18 @@ class AuthorizationServiceImpl: AuthorizationService {
         userRepository.create(user: newUser)
         
         newId += 1
+        return true
+    }
+    
+    
+    //- Добавить валидацию email и/или пароля в реальном времени с отображением невалидности
+    func validateInput(email: String) -> Bool {
+        let emailRegex = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        let predicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        
+        if !predicate.evaluate(with: email) {
+            return false
+        }
         return true
     }
 }

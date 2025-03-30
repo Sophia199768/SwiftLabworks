@@ -9,7 +9,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         let userRepository = UserRepositoryImpl()
         let authService = AuthorizationServiceImpl(userRepository: userRepository)
-        let loginVC = LoginViewController(authorizationService: authService)
+        let loginVC = LoginController(authService: authService)
         let navigationController = UINavigationController(rootViewController: loginVC)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()

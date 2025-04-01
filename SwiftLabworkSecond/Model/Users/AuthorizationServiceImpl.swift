@@ -25,7 +25,16 @@ class AuthorizationServiceImpl: AuthorizationService {
             return false;
         }
         
-        let newUser = User(id: Int128(newId), login: authorizationDto.login, name: authorizationDto.name, surname: authorizationDto.surname, patronymic: authorizationDto.patronymic, male: authorizationDto.male, password: authorizationDto.password, workStatus: authorizationDto.workStatus)
+        let newUser = User(
+                   id: Int128(newId),
+                   login: authorizationDto.login,
+                   name: authorizationDto.name,
+                   surname: authorizationDto.surname,
+                   patronymic: authorizationDto.patronymic,
+                   male: authorizationDto.male,
+                   password: authorizationDto.password,
+                   workStatus: authorizationDto.workStatus
+               )
         
         userRepository.create(user: newUser)
         

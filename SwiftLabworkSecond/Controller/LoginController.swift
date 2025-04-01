@@ -1,7 +1,7 @@
 import UIKit
 
 class LoginController: UIViewController, LoginControllerProtocol {
-    private let loginView = LoginView()
+    private var loginView: LoginView!
     private let authService: AuthorizationService
 
         init(authService: AuthorizationService) {
@@ -14,6 +14,7 @@ class LoginController: UIViewController, LoginControllerProtocol {
         }
     
     override func loadView() {
+        loginView = LoginView()
         view = loginView
     }
     

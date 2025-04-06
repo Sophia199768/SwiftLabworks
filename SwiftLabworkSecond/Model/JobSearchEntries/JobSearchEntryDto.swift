@@ -1,5 +1,4 @@
 
-// Дто для создания
 struct JobSearchEntryDto {
     let position: String
     let companyName: String

@@ -8,7 +8,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         let userRepository = UserRepositoryImpl()
-        let authService = AuthorizationServiceImpl(userRepository: userRepository)
+        let networkService = AuthNetworkService()
+        let authService = AuthorizationServiceImpl(userRepository: userRepository, userNetwork: networkService)
         let loginVC = LoginController(authService: authService)
         let navigationController = UINavigationController(rootViewController: loginVC)
         window?.rootViewController = navigationController

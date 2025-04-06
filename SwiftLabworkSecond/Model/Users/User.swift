@@ -1,5 +1,5 @@
 
-struct User {
+struct User: Codable {
     var id: Int128
     var login: String
     var name: String

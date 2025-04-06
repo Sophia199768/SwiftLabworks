@@ -1,4 +1,5 @@
 
+// Пользователь
 struct User {
     var id: Int128
     var login: String

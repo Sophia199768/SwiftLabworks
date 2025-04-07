@@ -3,15 +3,17 @@ import UIKit
 class LoginController: UIViewController, LoginControllerProtocol {
     private var loginView: LoginView!
     private let authService: AuthorizationService
-
-        init(authService: AuthorizationService) {
-            self.authService = authService
-            super.init(nibName: nil, bundle: nil)
-        }
-
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+    private let router: Router
+    
+    init(authService: AuthorizationService, router: Router) {
+        self.authService = authService
+        self.router = router
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         loginView = LoginView()
@@ -39,14 +41,15 @@ class LoginController: UIViewController, LoginControllerProtocol {
     
     @objc func loginButtonTapped() {
         guard let email = loginView.emailField.text, let password = loginView.passwordField.text else { return }
-        let autorizationDto = AuthorizationDto(email: email, password: password)
+        let authorizationDto = AuthorizationDto(email: email, password: password)
         
         if authService.validateInput(email: email) {
-            let success = authService.login(authorizationDto: autorizationDto)
+            let success = authService.login(authorizationDto: authorizationDto)
             if success {
-                print("Login successful")
+                router.showListOfUniversities(from: self)
             } else {
-                print("Login failed")
+                loginView.emailError.text = "Login failed"
+                loginView.emailError.isHidden = false
             }
         } else {
             loginView.emailError.text = "Please enter a valid email"

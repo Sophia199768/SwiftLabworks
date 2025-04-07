@@ -1,7 +1,5 @@
 import UIKit
 
-
-// View для странички авторизации
 class LoginView: UIView {
     let emailField: UITextField = {
         let textField = UITextField()

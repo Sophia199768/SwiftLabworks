@@ -1,6 +1,6 @@
 import Foundation
 
-class UniversityViewModel {
+class UniversityViewModel : UniversityViewModelProtocol {
     let networkService: UniversityNetworkService
     private var universities: [UniversityEntry] = []
     private var currentPage = 0

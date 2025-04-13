@@ -3,10 +3,13 @@ import UIKit
 class UniversityListController: UIViewController, TableManagerDelegate {
     private let viewModel: UniversityViewModel
     private let router: Router
-    private let tableManager: TableManager
+    private var tableManager: TableManager
     private let tableView = UITableView()
     private let activityIndicator = UIActivityIndicatorView(style: .medium)
     private let refreshControl = UIRefreshControl()
+    
+    private var mainStackView: StackView!
+    private var titleLabel: Label!
     
     init(viewModel: UniversityViewModel, router: Router, tableManager: TableManager = UniversityTableManager()) {
         self.viewModel = viewModel
@@ -24,36 +27,41 @@ class UniversityListController: UIViewController, TableManagerDelegate {
         setupUI()
         bindViewModel()
         tableManager.setup(with: tableView)
-        (tableManager as? UniversityTableManager)?.delegate = self
+        tableManager.delegate = self
         viewModel.loadUniversities()
     }
     
     private func setupUI() {
-        title = "List of Universities"
-        // Цвет заднего фона будет небесно голубым
-        view.backgroundColor = UIColor(
-            red: 135/255.0,
-            green: 206/255.0,
-            blue: 235/255.0,
-            alpha: 0.9
-        )
+        view.backgroundColor = Color.background
+  
+    
+        titleLabel = Label(viewModel: LabelViewModel(
+            style: .head,
+            text: "List of Universities",
+            isHidden: false
+        ))
         
-        // UIRefreshControl и обновлять контент по Pull-to-Refresh
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh")
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
         tableView.refreshControl = refreshControl
-        
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         
-        view.addSubview(tableView)
+        mainStackView = StackView(
+            axis: .vertical,
+            spacing: Space.m,
+            arrangedSubviews: [titleLabel, tableView]
+        )
+        
+        view.addSubview(mainStackView)
         view.addSubview(activityIndicator)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            mainStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Space.s),
+            mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Space.s),
+            mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Space.s),
+            mainStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Space.s),
             
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
@@ -73,15 +81,22 @@ class UniversityListController: UIViewController, TableManagerDelegate {
         }
         
         viewModel.onLoadingStateChanged = { [weak self] isLoading in
-            //Loading
             isLoading ? self?.activityIndicator.startAnimating() : self?.activityIndicator.stopAnimating()
         }
         
         viewModel.onError = { [weak self] errorMessage in
             self?.refreshControl.endRefreshing()
-            let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            self?.present(alert, animated: true)
+            let errorLabel = Label(viewModel: LabelViewModel(
+                style: .error,
+                text: errorMessage,
+                isHidden: false
+            ))
+            self?.router.showAlert(
+                title: "Error",
+                message: errorMessage,
+                from: self!
+                
+            )
         }
     }
     

@@ -1,5 +1,6 @@
 import UIKit
 
+
 class LoginController: UIViewController, LoginControllerProtocol {
     private var loginView: LoginView!
     private let authService: AuthorizationService
@@ -16,31 +17,57 @@ class LoginController: UIViewController, LoginControllerProtocol {
     }
     
     override func loadView() {
-        loginView = LoginView()
+        loginView = LoginView(viewModel: .init(
+            emailPlaceholder: "Email",
+            passwordPlaceholder: "Password",
+            loginButtonTitle: "Login"
+        ))
         view = loginView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        loginView.emailField.addTarget(self, action: #selector(emailTextChanged(_:)), for: .editingChanged)
-        loginView.loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        (loginView.emailTextField as! UITextField).addTarget(self, action: #selector(emailTextChanged(_:)), for: .editingChanged)
+        (loginView.loginButtonView as! UIButton).addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
     }
     
     @objc func emailTextChanged(_ textField: UITextField) {
-        guard let email = textField.text else { return }
+        guard let email = textField.text else {
+            loginView.configure(with: .init(
+                emailPlaceholder: "Email",
+                passwordPlaceholder: "Password",
+                loginButtonTitle: "Login",
+                errorMessage: "Email is empty"
+            ))
+            return
+        }
         if authService.validateInput(email: email) {
-            loginView.emailField.layer.borderColor = UIColor.clear.cgColor
-            loginView.emailError.isHidden = true
+            loginView.configure(with: .init(
+                emailPlaceholder: "Email",
+                passwordPlaceholder: "Password",
+                loginButtonTitle: "Login",
+                errorMessage: nil
+            ))
         } else {
-            loginView.emailField.layer.borderColor = UIColor.red.cgColor
-            loginView.emailField.layer.borderWidth = 1.0
-            loginView.emailError.text = "Invalid email format"
-            loginView.emailError.isHidden = false
+            loginView.configure(with: .init(
+                emailPlaceholder: "Email",
+                passwordPlaceholder: "Password",
+                loginButtonTitle: "Login",
+                errorMessage: "Invalid email format"
+            ))
         }
     }
     
     @objc func loginButtonTapped() {
-        guard let email = loginView.emailField.text, let password = loginView.passwordField.text else { return }
+        guard let email = loginView.emailText, let password = loginView.passwordText else {
+            loginView.configure(with: .init(
+                emailPlaceholder: "Email",
+                passwordPlaceholder: "Password",
+                loginButtonTitle: "Login",
+                errorMessage: "Please fill all fields"
+            ))
+            return
+        }
         let authorizationDto = AuthorizationDto(email: email, password: password)
         
         if authService.validateInput(email: email) {
@@ -48,12 +75,20 @@ class LoginController: UIViewController, LoginControllerProtocol {
             if success {
                 router.showListOfUniversities(from: self)
             } else {
-                loginView.emailError.text = "Login failed"
-                loginView.emailError.isHidden = false
+                loginView.configure(with: .init(
+                    emailPlaceholder: "Email",
+                    passwordPlaceholder: "Password",
+                    loginButtonTitle: "Login",
+                    errorMessage: "Login failed"
+                ))
             }
         } else {
-            loginView.emailError.text = "Please enter a valid email"
-            loginView.emailError.isHidden = false
+            loginView.configure(with: .init(
+                emailPlaceholder: "Email",
+                passwordPlaceholder: "Password",
+                loginButtonTitle: "Login",
+                errorMessage: "Please enter a valid email"
+            ))
         }
     }
 }

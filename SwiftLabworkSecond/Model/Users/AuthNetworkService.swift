@@ -1,9 +1,9 @@
 import Foundation
 
-class AuthNetworkService {
+class AuthNetworkService  : AuthNetworkServiceProtocol {
     private let baseURL = "https://alfa-itmo.ru/server/v1/storage/user-settings"
-    private let login = "367928"
-    private let password = "TnguIcIjVBVX"
+    let authString = "\(Secrets.login):\(Secrets.password)"
+
     
     func getUsers(completion: @escaping (Result<[User], Error>) -> Void) {
         guard let url = URL(string: baseURL) else {
@@ -14,7 +14,7 @@ class AuthNetworkService {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         
-        let authString = "\(login):\(password)"
+        let authString = "\(Secrets.login):\(Secrets.password)"
         guard let authData = authString.data(using: .utf8) else {
             completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Something go wrong"])))
             return

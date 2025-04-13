@@ -7,6 +7,8 @@ protocol TableManagerDelegate: AnyObject {
 protocol TableManager {
     func setup(with tableView: UITableView)
     func update(with viewModels: [any ViewModel])
+    
+    var delegate: TableManagerDelegate? { get set }
 }
 
 class UniversityTableManager: NSObject, TableManager {

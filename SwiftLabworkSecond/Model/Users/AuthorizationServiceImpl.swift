@@ -3,15 +3,32 @@ import Foundation
 class AuthorizationServiceImpl: AuthorizationService {
     private let userRepository: UserRepository
     private var newId = 1;
+    private var userNetwork : AuthNetworkService
     
-    init(userRepository: UserRepository) {
+    init(userRepository: UserRepository, userNetwork: AuthNetworkService) {
         self.userRepository = userRepository
+        self.userNetwork = userNetwork
     }
     
     func login(authorizationDto: AuthorizationDto) -> Bool {
-        let users = userRepository.findAll()
-        return users.contains { $0.login == authorizationDto.email && $0.password == authorizationDto.password }
+        let semaphore = DispatchSemaphore(value: 0)
+        var isLoggedIn = false
+            
+        userNetwork.getUsers { result in
+            switch result {
+            case .success(let users):
+                isLoggedIn = users.contains { $0.login == authorizationDto.email && $0.password == authorizationDto.password }
+            case .failure(let error):
+                print("Error fetching users: \(error)")
+                isLoggedIn = false
+            }
+            semaphore.signal()
+        }
+            
+        semaphore.wait()
+        return isLoggedIn
     }
+    
     
     func logout() {
         print("User logged out")

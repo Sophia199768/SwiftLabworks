@@ -5,7 +5,7 @@ class UniversityNetworkService {
     private let baseURL = "http://universities.hipolabs.com/search"
     private let cacheFileURL: URL
     // На страничке по 10 элементов будет
-    private let itemsPerPage = 10
+    private let itemsPerPage = 20
     
     init() {
         let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
@@ -13,7 +13,7 @@ class UniversityNetworkService {
     }
     
     // К сожалению, Api не поддерживает пагинацию, поэтому сделала через offset, теперь можно переключаться между страничками
-    func getUniversities(country: String, page: Int, completion: @escaping (Result<[UniversityEntry], Error>) -> Void) {
+    func getUniversities(page: Int, completion: @escaping (Result<[UniversityEntry], Error>) -> Void) {
         let offset = page * itemsPerPage
         
         if let cachedData = try? Data(contentsOf: cacheFileURL),
@@ -23,8 +23,7 @@ class UniversityNetworkService {
         }
         
         var components = URLComponents(string: baseURL)
-        var queryItems: [URLQueryItem] = [
-            URLQueryItem(name: "country", value: country),
+        let queryItems: [URLQueryItem] = [
             URLQueryItem(name: "limit", value: String(itemsPerPage)),
             URLQueryItem(name: "offset", value: String(offset))
         ]

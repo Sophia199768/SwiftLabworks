@@ -2,13 +2,13 @@ import Foundation
 
 // Модель данных с сервера
 // Использую Codable: "Для парсинга моделек предпочтительнее использовать Codable"
-struct UniversityResponse: Codable {
+struct UniversityResponse: Decodable {
     let universities: [UniversityEntry]
 }
 
 
 // Сущность университет, помогает пользователю определиться в какой вуз надо пойти, чтобы получить работу мечты
-struct UniversityEntry: Codable {
+struct UniversityEntry: Decodable {
     // Название университета
     let name: String
     // Номер страны, например, для России RU

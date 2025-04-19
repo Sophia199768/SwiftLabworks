@@ -1,6 +1,6 @@
 import Foundation
 
-class UniversityNetworkService {
+class UniversityNetworkService : UniversityNetworkServiceProtocol  {
     // Ссылочка для университетов
     private let baseURL = "http://universities.hipolabs.com/search"
     private let cacheFileURL: URL
@@ -32,7 +32,7 @@ class UniversityNetworkService {
         
         //Чтобы пользователь не подал имя, с вопросом, например
         guard let url = components?.url else {
-            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid URL"])))
+            completion(.failure(UniversityErrors.invalidURL))
             return
         }
         
@@ -43,7 +43,7 @@ class UniversityNetworkService {
             }
             
             guard let data = data else {
-                completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Empty data. Nothing was found"])))
+                completion(.failure(UniversityErrors.emptyData))
                 return
             }
             

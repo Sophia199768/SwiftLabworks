@@ -1,13 +1,13 @@
 import UIKit
 
-public enum LabelStyle {
+public enum LabelStyleToken {
     case head
     case body
     case error
 }
 
 internal class Label: UILabel, LabelProtocol {
-    private let style: LabelStyle
+    private let style: LabelStyleToken
     
     init(viewModel: LabelViewModel) {
         self.style = viewModel.style

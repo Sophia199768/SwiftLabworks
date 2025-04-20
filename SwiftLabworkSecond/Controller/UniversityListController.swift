@@ -33,36 +33,36 @@ class UniversityListController: UIViewController, TableManagerDelegate {
     
     private func setupUI() {
         view.backgroundColor = Color.background
-  
-    
+
         titleLabel = Label(viewModel: LabelViewModel(
             style: .head,
             text: "List of Universities",
             isHidden: false
         ))
-        
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.refreshControl = refreshControl
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh")
         refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-        tableView.refreshControl = refreshControl
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        
+
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        
-        mainStackView = StackView(
-            axis: .vertical,
-            spacing: Space.m,
-            arrangedSubviews: [titleLabel, tableView]
-        )
-        
-        view.addSubview(mainStackView)
+
+        view.addSubview(titleLabel)
+        view.addSubview(tableView)
         view.addSubview(activityIndicator)
-        
+
         NSLayoutConstraint.activate([
-            mainStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Space.s),
-            mainStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Space.s),
-            mainStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Space.s),
-            mainStackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Space.s),
-            
+            titleLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Space.s),
+            titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Space.s),
+            titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Space.s),
+    
+            tableView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: Space.m),
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Space.s),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Space.s),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Space.s),
+
             activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])

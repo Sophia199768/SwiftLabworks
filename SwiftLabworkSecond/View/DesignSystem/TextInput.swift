@@ -1,13 +1,13 @@
 import UIKit
 
-public enum TextInputStyle {
+public enum TextInputStyleToken {
     case standard
     case email
     case secure
 }
 
 internal class TextInput: UITextField, TextInputProtocol {
-    private let style: TextInputStyle
+    private let style: TextInputStyleToken
     
     init(viewModel: TextInputViewModel) {
         self.style = viewModel.style

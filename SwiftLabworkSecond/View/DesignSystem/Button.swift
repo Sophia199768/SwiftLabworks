@@ -1,13 +1,13 @@
 import UIKit
 
-public enum ButtonStyle {
+public enum ButtonStyleToken {
     case indigoType
     case greenType
     case redType
 }
 
 internal class Button: UIButton, ButtonProtocol {
-    private let style: ButtonStyle
+    private let style: ButtonStyleToken
     
     init(viewModel: ButtonViewModel) {
         self.style = viewModel.style

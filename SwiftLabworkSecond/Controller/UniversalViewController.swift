@@ -47,7 +47,6 @@ class UniversalViewController: UIViewController {
     
     private func loadData() {
         let urlString = config.endpoint.replacingOccurrences(of: ":key", with: config.key)
-        print("Requesting URL: \(urlString)")
         networkService.fetchData(from: urlString) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {

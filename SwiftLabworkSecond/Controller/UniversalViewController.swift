@@ -108,13 +108,6 @@ class UniversalViewController: UIViewController {
         containerView.addSubview(linkLabel)
         linkLabel.translatesAutoresizingMaskIntoConstraints = false
         
-        retryButton = UIButton(type: .system)
-        retryButton?.setTitle("Попробовать снова", for: .normal)
-        retryButton?.setTitleColor(.blue, for: .normal)
-        retryButton?.addTarget(self, action: #selector(retryLoading), for: .touchUpInside)
-        containerView.addSubview(retryButton!)
-        retryButton?.translatesAutoresizingMaskIntoConstraints = false
-        
         NSLayoutConstraint.activate([
             errorLabel!.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
             errorLabel!.centerYAnchor.constraint(equalTo: containerView.centerYAnchor, constant: -40),
@@ -125,9 +118,7 @@ class UniversalViewController: UIViewController {
             linkLabel.topAnchor.constraint(equalTo: errorLabel!.bottomAnchor, constant: 8),
             linkLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 16),
             linkLabel.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -16),
-            
-            retryButton!.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
-            retryButton!.topAnchor.constraint(equalTo: linkLabel.bottomAnchor, constant: 16)
+    
         ])
     }
     

@@ -1,5 +1,8 @@
 import UIKit
 
+
+// Добавила, чтобы отрисовывались странички университетов, при нажатии на них,
+// На сервис ссылку фото университета и его описание добавила
 class UniversalViewController: UIViewController {
     private let config: ScreenConfig
     private let mapper: BDUIMapperProtocol
@@ -84,6 +87,7 @@ class UniversalViewController: UIViewController {
         }
     }
     
+    //Если нет университета на сервисе, то будет предложение посмотреть про Итмо)
     private func showError() {
         errorLabel?.removeFromSuperview()
         retryButton?.removeFromSuperview()

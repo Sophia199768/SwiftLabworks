@@ -3,7 +3,7 @@ import UIKit
 
 // Добавила, чтобы отрисовывались странички университетов, при нажатии на них,
 // На сервис ссылку фото университета и его описание добавила
-class UniversalViewController: UIViewController {
+class UserViewController: UIViewController {
     private let config: ScreenConfig
     private let mapper: BDUIMapperProtocol
     private let networkService: NetworkServiceProtocol

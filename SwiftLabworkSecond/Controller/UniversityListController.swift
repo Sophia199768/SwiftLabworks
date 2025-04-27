@@ -111,7 +111,7 @@ class UniversityListController: UIViewController, TableManagerDelegate {
         
         let mapper = BDUIMapper()
         let networkService = NetworkService()
-        let universalVC = UniversalViewController(config: config, mapper: mapper, networkService: networkService)
+        let universalVC = UserViewController(config: config, mapper: mapper, networkService: networkService)
         
         navigationController?.pushViewController(universalVC, animated: true)
     }

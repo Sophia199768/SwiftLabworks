@@ -1,3 +1,4 @@
+
 public struct LabelViewModel {
     public let style: LabelStyleToken
     public let text: String?

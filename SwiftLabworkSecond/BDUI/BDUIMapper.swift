@@ -41,11 +41,19 @@ public final class BDUIMapper: BDUIMapperProtocol {
     }
 
     private func configureLabel(_ model: BDUIViewModel) -> UIView {
-        let style = LabelStyleToken.fromString(model.content.style)
         let text = model.content.text ?? ""
         let isHidden = model.content.isHidden ?? false
+       
+        let style: LabelStyleToken
+        if let styleRaw = model.content.style, let validStyle = LabelStyleToken(rawValue: styleRaw.rawValue) {
+            style = validStyle
+        } else {
+            style = .body
+        }
+
         let viewModel = LabelViewModel(style: style, text: text, isHidden: isHidden)
         let label = DesignSystem.label(viewModel: viewModel)
+
         label.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             label.heightAnchor.constraint(greaterThanOrEqualToConstant: 48)
@@ -55,7 +63,8 @@ public final class BDUIMapper: BDUIMapperProtocol {
 
     private func configureButton(_ model: BDUIViewModel) -> UIView {
         let title = model.content.text ?? "Button"
-        let style = ButtonStyleToken.fromString(model.content.style)
+        let styleString = model.content.style?.rawValue
+        let style = ButtonStyleToken.fromString(styleString)
         let viewModel = ButtonViewModel(style: style, title: title)
         let button = DesignSystem.button(viewModel: viewModel)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -76,7 +85,8 @@ public final class BDUIMapper: BDUIMapperProtocol {
     private func configureTextInput(_ model: BDUIViewModel) -> UIView {
         let placeholder = model.content.placeholder ?? ""
         let text = model.content.text
-        let style = TextInputStyleToken.fromString(model.content.style)
+        let styleString = model.content.style?.rawValue
+        let style = TextInputStyleToken.fromString(styleString)
         let viewModel = TextInputViewModel(style: style, placeholder: placeholder, text: text)
         let textInput = DesignSystem.textInput(viewModel: viewModel)
         return textInput

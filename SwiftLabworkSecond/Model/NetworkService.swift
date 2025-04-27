@@ -1,17 +1,17 @@
 import Foundation
 
-class URLSessionNetworkService: NetworkServiceProtocol {
+class NetworkService: NetworkServiceProtocol {
     func fetchData(from urlString: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        let login = Secrets.login
+        let password = Secrets.password
+        let credentials = "\(login):\(password)"
+        
         guard let url = URL(string: urlString) else {
             completion(.failure(URLError(.badURL)))
             return
         }
         
         var request = URLRequest(url: url)
-        
-        let login = Secrets.login
-        let password = Secrets.password
-        let credentials = "\(login):\(password)"
         
         if let credentialsData = credentials.data(using: .utf8) {
             let base64Credentials = credentialsData.base64EncodedString()
@@ -31,10 +31,7 @@ class URLSessionNetworkService: NetworkServiceProtocol {
                 completion(.failure(URLError(.badServerResponse)))
                 return
             }
-            
-            print("HTTP Status Code: \(httpResponse.statusCode)")
-            print("Response Headers: \(httpResponse.allHeaderFields)")
-            
+           
             guard (200...299).contains(httpResponse.statusCode) else {
                 let error = NSError(domain: "", code: httpResponse.statusCode, userInfo: [
                     NSLocalizedDescriptionKey: "Server returned status code \(httpResponse.statusCode)"

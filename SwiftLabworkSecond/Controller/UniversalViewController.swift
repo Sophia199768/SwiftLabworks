@@ -52,11 +52,10 @@ class UniversalViewController: UIViewController {
                     if let jsonString = String(data: data, encoding: .utf8) {
                         print("Received JSON: \(jsonString)")
                     } else {
-                        print("Failed to decode data as UTF-8")
+                        print("Failed to decode!")
                     }
                     self?.handleData(data)
                 case .failure(let error):
-                    print("Error loading data: \(error)")
                     self?.showError()
                 }
             }
@@ -66,9 +65,8 @@ class UniversalViewController: UIViewController {
     private func handleData(_ data: Data) {
         do {
             let model = try JSONDecoder().decode(BDUIViewModel.self, from: data)
-            print("Decoded model: \(model.type), subviews: \(model.subviews?.count ?? 0)")
             let view = mapper.map(from: model)
-            print("Mapped view: \(view)")
+    
             
             self.errorLabel?.removeFromSuperview()
             self.retryButton?.removeFromSuperview()
@@ -82,7 +80,6 @@ class UniversalViewController: UIViewController {
                 view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
             ])
         } catch {
-            print("Error parsing data: \(error)")
             showError()
         }
     }
@@ -101,7 +98,7 @@ class UniversalViewController: UIViewController {
         errorLabel?.translatesAutoresizingMaskIntoConstraints = false
         
         let linkLabel = UILabel()
-        let linkText = "https://abit.itmo.ru/bachelor?utm_source=yandex_search&utm_medium=cpc&utm_campaign=118356380&utm_content=16864052882&utm_term=---autotargeting&calltouch_tm=yd_c%3A118356380_gb%3A5544482087_ad%3A16864052882_ph%3A54355177186_st%3Asearch_pt%3Apremium_p%3A2_s%3Anone_dt%3Adesktop_reg%3A2_ret%3A54355177186_apt%3Anone&yclid=8528120185782796287"
+        let itmoLink = "https://abit.itmo.ru/bachelor?utm_source=yandex_search&utm_medium=cpc&utm_campaign=118356380&utm_content=16864052882&utm_term=---autotargeting&calltouch_tm=yd_c%3A118356380_gb%3A5544482087_ad%3A16864052882_ph%3A54355177186_st%3Asearch_pt%3Apremium_p%3A2_s%3Anone_dt%3Adesktop_reg%3A2_ret%3A54355177186_apt%3Anone&yclid=8528120185782796287"
         linkLabel.text = "Visit ITMO"
         linkLabel.textColor = .blue
         linkLabel.textAlignment = .center
@@ -135,8 +132,8 @@ class UniversalViewController: UIViewController {
     }
     
     @objc private func openLink() {
-        let urlString = "https://abit.itmo.ru/bachelor?utm_source=yandex_search&utm_medium=cpc&utm_campaign=118356380&utm_content=16864052882&utm_term=---autotargeting&calltouch_tm=yd_c%3A118356380_gb%3A5544482087_ad%3A16864052882_ph%3A54355177186_st%3Asearch_pt%3Apremium_p%3A2_s%3Anone_dt%3Adesktop_reg%3A2_ret%3A54355177186_apt%3Anone&yclid=8528120185782796287"
-        if let url = URL(string: urlString) {
+        let toItmoSite = "https://abit.itmo.ru/bachelor?utm_source=yandex_search&utm_medium=cpc&utm_campaign=118356380&utm_content=16864052882&utm_term=---autotargeting&calltouch_tm=yd_c%3A118356380_gb%3A5544482087_ad%3A16864052882_ph%3A54355177186_st%3Asearch_pt%3Apremium_p%3A2_s%3Anone_dt%3Adesktop_reg%3A2_ret%3A54355177186_apt%3Anone&yclid=8528120185782796287"
+        if let url = URL(string: toItmoSite) {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }

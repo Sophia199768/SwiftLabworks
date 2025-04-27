@@ -62,12 +62,9 @@ public final class BDUIMapper: BDUIMapperProtocol {
     private func configureButton(_ model: BDUIViewModel) -> UIView {
         let title = model.content.text ?? "Button"
         let style = ButtonStyleToken.fromString(model.content.style)
-        let viewModel = ButtonViewModel(
-            style: style,
-            title: title,
-            action: model.content.action
+        let viewModel = ButtonViewModel(style: style,title: title, action: model.content.action
         )
-        print("Button action: \(String(describing: model.content.action))")
+        
         let button = DesignSystem.button(viewModel: viewModel)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isUserInteractionEnabled = true

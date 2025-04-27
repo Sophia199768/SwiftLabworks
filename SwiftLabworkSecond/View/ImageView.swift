@@ -1,9 +1,5 @@
 import UIKit
 
-public protocol ImageProtocol: UIView {
-    func configure(with viewModel: ImageViewModel)
-}
-
 public struct ImageViewModel {
     let url: String?
     let styleString: String?
@@ -31,7 +27,7 @@ internal class ImageView: UIImageView, ImageProtocol {
                         self?.image = image
                     }
                 } else {
-                    print("Failed to load image: \(error?.localizedDescription ?? "Unknown error")")
+                    print("Failed")
                 }
             }.resume()
         }
@@ -54,7 +50,6 @@ internal class ImageView: UIImageView, ImageProtocol {
             }
         }
         
-        translatesAutoresizingMaskIntoConstraints = false
         if let width = width, let height = height {
             widthAnchor.constraint(equalToConstant: width).isActive = true
             heightAnchor.constraint(equalToConstant: height).isActive = true

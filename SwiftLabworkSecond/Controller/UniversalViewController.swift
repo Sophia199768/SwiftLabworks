@@ -44,10 +44,16 @@ class UniversalViewController: UIViewController {
     
     private func loadData() {
         let urlString = config.endpoint.replacingOccurrences(of: ":key", with: config.key)
+        print("Requesting URL: \(urlString)")
         networkService.fetchData(from: urlString) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let data):
+                    if let jsonString = String(data: data, encoding: .utf8) {
+                        print("Received JSON: \(jsonString)")
+                    } else {
+                        print("Failed to decode data as UTF-8")
+                    }
                     self?.handleData(data)
                 case .failure(let error):
                     print("Error loading data: \(error)")
@@ -60,10 +66,13 @@ class UniversalViewController: UIViewController {
     private func handleData(_ data: Data) {
         do {
             let model = try JSONDecoder().decode(BDUIViewModel.self, from: data)
+            print("Decoded model: \(model.type), subviews: \(model.subviews?.count ?? 0)")
             let view = mapper.map(from: model)
-           
+            print("Mapped view: \(view)")
+            
             self.errorLabel?.removeFromSuperview()
             self.retryButton?.removeFromSuperview()
+            containerView.subviews.forEach { $0.removeFromSuperview() }
             containerView.addSubview(view)
             view.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
@@ -82,7 +91,6 @@ class UniversalViewController: UIViewController {
         errorLabel?.removeFromSuperview()
         retryButton?.removeFromSuperview()
         
-    
         errorLabel = UILabel()
         errorLabel?.text = "Now no info about this university, very sorry about it! But you can read about ITMO:"
         errorLabel?.textColor = .red
@@ -91,7 +99,7 @@ class UniversalViewController: UIViewController {
         errorLabel?.font = .systemFont(ofSize: 16)
         containerView.addSubview(errorLabel!)
         errorLabel?.translatesAutoresizingMaskIntoConstraints = false
-       
+        
         let linkLabel = UILabel()
         let linkText = "https://abit.itmo.ru/bachelor?utm_source=yandex_search&utm_medium=cpc&utm_campaign=118356380&utm_content=16864052882&utm_term=---autotargeting&calltouch_tm=yd_c%3A118356380_gb%3A5544482087_ad%3A16864052882_ph%3A54355177186_st%3Asearch_pt%3Apremium_p%3A2_s%3Anone_dt%3Adesktop_reg%3A2_ret%3A54355177186_apt%3Anone&yclid=8528120185782796287"
         linkLabel.text = "Visit ITMO"

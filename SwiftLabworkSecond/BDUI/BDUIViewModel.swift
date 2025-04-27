@@ -1,10 +1,11 @@
+
 public struct BDUIViewModel: Codable {
     public let type: String
     public let content: Content
     public let subviews: [BDUIViewModel]?
 
     public struct Content: Codable {
-        let style: LabelStyleToken?
+        let style: String?
         let backgroundColor: String?
         let spacing: String?
         let text: String?
@@ -18,7 +19,7 @@ public struct BDUIViewModel: Codable {
         }
 
         public init(
-            style: LabelStyleToken? = nil,
+            style: String? = nil,
             backgroundColor: String? = nil,
             spacing: String? = nil,
             text: String? = nil,
@@ -37,7 +38,7 @@ public struct BDUIViewModel: Codable {
 
         public init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            style = try container.decodeIfPresent(LabelStyleToken.self, forKey: .style)
+            style = try container.decodeIfPresent(String.self, forKey: .style)
             backgroundColor = try container.decodeIfPresent(String.self, forKey: .backgroundColor)
             spacing = try container.decodeIfPresent(String.self, forKey: .spacing)
             text = try container.decodeIfPresent(String.self, forKey: .text)
@@ -55,6 +56,8 @@ public struct BDUIViewModel: Codable {
 
 extension BDUIViewModel.Content {
     var isHidden: Bool? {
-        return _isHidden
+        get {
+            _isHidden
+        }
     }
 }

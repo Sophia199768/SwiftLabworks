@@ -1,10 +1,10 @@
 import UIKit
 
 public final class BDUIMapper: BDUIMapperProtocol {
-
     public init() {}
 
     public func map(from model: BDUIViewModel) -> UIView {
+        
         guard let viewType = ViewTypeToken(rawValue: model.type) else {
             return UIView()
         }
@@ -12,7 +12,7 @@ public final class BDUIMapper: BDUIMapperProtocol {
         switch viewType {
         case .contentView:
             return configureContentView(model)
-        case .stackView:
+        case .stack:
             return configureStackView(model)
         case .label:
             return configureLabel(model)
@@ -20,6 +20,8 @@ public final class BDUIMapper: BDUIMapperProtocol {
             return configureButton(model)
         case .textInput:
             return configureTextInput(model)
+        case .image:
+            return configureImage(model)
         }
     }
 
@@ -34,43 +36,50 @@ public final class BDUIMapper: BDUIMapperProtocol {
     }
 
     private func configureStackView(_ model: BDUIViewModel) -> UIView {
+        let axis: NSLayoutConstraint.Axis = model.content.style == "vertical" ? .vertical : .horizontal
         let spacing = model.content.spacing.flatMap { SpaceToken(rawValue: $0)?.value } ?? Space.s
-        let stackView = DesignSystem.stackView(axis: .vertical, spacing: spacing)
+        let stackView = DesignSystem.stackView(axis: axis, spacing: spacing)
         configureSubviews(for: stackView, subviews: model.subviews)
         return stackView
     }
 
     private func configureLabel(_ model: BDUIViewModel) -> UIView {
-        let style = LabelStyleToken.fromString(model.content.style)
         let text = model.content.text ?? ""
         let isHidden = model.content.isHidden ?? false
-        let viewModel = LabelViewModel(style: style, text: text, isHidden: isHidden)
+        let style = model.content.style.flatMap(LabelStyleToken.init(rawValue:)) ?? .body
+        let viewModel = LabelViewModel(
+            style: style,
+            text: text,
+            isHidden: isHidden,
+            styleString: model.content.style
+        )
+        
         let label = DesignSystem.label(viewModel: viewModel)
         label.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            label.heightAnchor.constraint(greaterThanOrEqualToConstant: 48)
-        ])
         return label
     }
 
     private func configureButton(_ model: BDUIViewModel) -> UIView {
         let title = model.content.text ?? "Button"
         let style = ButtonStyleToken.fromString(model.content.style)
-        let viewModel = ButtonViewModel(style: style, title: title)
+        let viewModel = ButtonViewModel(style: style,title: title, action: model.content.action
+        )
+        
         let button = DesignSystem.button(viewModel: viewModel)
         button.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            button.heightAnchor.constraint(equalToConstant: 48)
-        ])
-        if let action = model.content.action {
-            if action.type == "print" {
-                (button as? UIButton)?.addAction(
-                    UIAction { _ in print(action.context) },
-                    for: .touchUpInside
-                )
-            }
-        }
+        button.isUserInteractionEnabled = true
         return button
+    }
+
+    private func configureImage(_ model: BDUIViewModel) -> UIView {
+        let viewModel = ImageViewModel(
+            url: model.content.text,
+            styleString: model.content.style,
+            isHidden: model.content.isHidden
+        )
+        let imageView = DesignSystem.image(viewModel: viewModel)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
     }
 
     private func configureTextInput(_ model: BDUIViewModel) -> UIView {
@@ -89,11 +98,10 @@ public final class BDUIMapper: BDUIMapperProtocol {
             view.addSubview(stack)
             stack.translatesAutoresizingMaskIntoConstraints = false
             NSLayoutConstraint.activate([
-                stack.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor),
+                stack.topAnchor.constraint(equalTo: view.topAnchor),
                 stack.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 stack.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                stack.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
-                stack.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+                stack.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor)
             ])
             stack.setContentHuggingPriority(.required, for: .vertical)
             stack.setContentCompressionResistancePriority(.required, for: .vertical)

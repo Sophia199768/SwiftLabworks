@@ -41,7 +41,6 @@ class UniversityListController: UIViewController, TableManagerDelegate {
         ))
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.refreshControl = refreshControl
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to Refresh")
@@ -95,12 +94,25 @@ class UniversityListController: UIViewController, TableManagerDelegate {
                 title: "Error",
                 message: errorMessage,
                 from: self!
-                
             )
         }
     }
     
     func didSelectItem(at index: Int) {
-        print("\(index)")
+        guard let university = viewModel.university(at: index) else { return }
+        
+
+        let key = university.name.replacingOccurrences(of: " ", with: "_")
+        let config = ScreenConfig(
+            endpoint: "https://alfa-itmo.ru/server/v1/storage/:key",
+            key: key,
+            title: university.name
+        )
+        
+        let mapper = BDUIMapper()
+        let networkService = NetworkService()
+        let universalVC = UserViewController(config: config, mapper: mapper, networkService: networkService)
+        
+        navigationController?.pushViewController(universalVC, animated: true)
     }
 }

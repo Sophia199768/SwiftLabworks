@@ -1,6 +1,6 @@
 import UIKit
 
-public enum LabelStyleToken {
+public enum LabelStyleToken : String, Codable  {
     case head
     case body
     case error
